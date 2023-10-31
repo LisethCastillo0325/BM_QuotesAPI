@@ -1,6 +1,8 @@
 import pytest
 from faker import Faker
 
+from django.conf import settings
+from django.core.management import call_command
 from django.contrib.auth.models import User
 from django_api.test.providers.user_providers import EmailProvider
 

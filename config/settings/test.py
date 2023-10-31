@@ -8,33 +8,11 @@ from .base import env
 
 # Base
 DEBUG = False
-SECRET_KEY = env("DJANGO_SECRET_KEY", default="7lEaACt4wsCj8JbXYgQLf4BmdG5QbuHTMYUGir2Gc1GHqqb2Pv8w9iXwwlIIviI2")
-TEST_RUNNER = "django.test.runner.DiscoverRunner"
+SECRET_KEY = env("DJANGO_SECRET_KEY", default="7lEaACt4wsCjhdsjdhksdhjksdhkshdksjhdcbfd45454d")
 
-# Cache
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": ""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-# Passwords
-PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
-
-# Templates
-TEMPLATES[0]["OPTIONS"]["debug"] = DEBUG  # NOQA
-TEMPLATES[0]["OPTIONS"]["loaders"] = [  # NOQA
-    (
-        "django.template.loaders.cached.Loader",
-        [
-            "django.template.loaders.filesystem.Loader",
-            "django.template.loaders.app_directories.Loader",
-        ],
-    )
-]
-
-# Email
-EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
-EMAIL_HOST = "localhost"
-EMAIL_PORT = 1025
