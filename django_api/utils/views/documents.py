@@ -8,7 +8,7 @@ from django.http.response import HttpResponse
 from django.template.loader import get_template
 
 
-class DocumentosView(GenericViewSet):
+class DocumentsView(GenericViewSet):
 
     options = {
         'page-size': 'Letter',

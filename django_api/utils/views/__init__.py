@@ -1,1 +1,1 @@
-from .documentos import DocumentosView
+from .documents import DocumentsView

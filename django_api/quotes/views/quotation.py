@@ -19,13 +19,10 @@ from ..filter import QuotationViewFilter
 from ..models.quotes import Quotation
 
 # Serializers
-from ..serializers import quotation as quotation_serialisers
+from ..serializers import quotation as quotation_serializers
 
 # Views
-from django_api.utils.views.documentos import DocumentosView
-
-# Service
-from django_api.quotes.services.quotation import QuotationServices
+from django_api.utils.views.documents import DocumentsView
 
 
 class QuotationViewSet(mixins.ListModelMixin,
@@ -44,8 +41,8 @@ class QuotationViewSet(mixins.ListModelMixin,
     def get_serializer_class(self):
         """Return serializer based on action."""
         if self.action == 'create':
-            return quotation_serialisers.AddQuotationSerializer
-        return quotation_serialisers.QuotationModelSerializer
+            return quotation_serializers.AddQuotationSerializer
+        return quotation_serializers.QuotationModelSerializer
 
     def get_object(self):
         obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
@@ -53,64 +50,63 @@ class QuotationViewSet(mixins.ListModelMixin,
         return obj
 
     def list(self, request, *args, **kwargs):
-        """ Listar facturas
+        """ List quotes
 
-            Permite listar todos los facturas registradas en el sistema.
+            Allows listing all invoices registered in the system.
         """
         return super().list(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
-        """ Consultar factura por ID
+        """ Query quotation by ID
 
-            Permite obtener información de un factura dado su ID
+            Allows obtaining information about an quotation given its ID.
         """  
         return super().retrieve(request, *args, **kwargs)
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-        """ Crear factura para un quotation
+        """ Create a quotation
 
-            Dado un quotation se crea su factura respectiva.
+            Create quotation
         """
-        serializer = quotation_serialisers.AddQuotationSerializer(data=request.data)
+        serializer = quotation_serializers.AddQuotationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        # Crear factura al quotation
+        # Create an invoice for the quotation
         quotation = serializer.save()
         
-        data = quotation_serialisers.QuotationModelSerializer(instance=quotation).data
+        data = quotation_serializers.QuotationModelSerializer(instance=quotation).data
         return Response(data=data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
-        """ Inactivar factura
+        """ Deactivate quotation
 
-            Permite anular una factura, no lo elimina.
+            Allows canceling an quotation, does not delete it.
         """
         return super().destroy(request, *args, **kwargs)
 
     def perform_destroy(self, instance):
-        """Metodo invocado por 'destroy' para cambiar el estado del Quotation."""
+        """Method invoked by 'destroy' to change the state of the Quotation."""
         instance.is_active = False
         instance.save()
 
     @action(detail=True, methods=['GET'])
-    def descargar(self, request, *args, **kwargs):
-        """ Descargar Factura PDF
+    def download(self, request, *args, **kwargs):
+        """ Download quotation PDF
 
-            Dado un ID de factura permite descargar su representación en PDF.
+            Given an quotation ID, allows downloading its PDF representation.
         """
 
         instance = self.get_object()
         data = self.get_serializer(instance=instance).data
 
-        # Consultar publicidad vigente
-        data['url_api'] = settings.URL_BACKEND
+        # Query current advertising
+        data['api_url'] = settings.URL_BACKEND
 
-        template = os.path.join('documentos', 'factura.html')
-        documentos_view = DocumentosView()
+        template = os.path.join('documents', 'invoice.html')
+        documents_view = DocumentsView()
 
-        return documentos_view.generar_pdf(
+        return documents_view.generate_pdf(
             template=template,
             data=data,
-            file_name='factura_{}_{}'.format(instance.id, instance.client)
+            file_name='invoice_{}_{}'.format(instance.id, instance.client)
         )
-        

@@ -1,13 +1,3 @@
-# Comandos Docker
-
-Construir contenedor
-
-    docker build -t ms_quotes/django-app -f compose/local/django/Dockerfile .
-
-Correr contenedor
-
-    docker run -v /home/liseth/Documentos/desarrollo/proyectos/dessoft-1/django_api/django_api/:/app --env-file=./.envs/.local/.django --env-file=./.envs/.local/.postgres -p 8000:8000 ms_quotes/django-app /start
-
 
 # Comandos Docker Compose
 
@@ -32,62 +22,17 @@ Ejecutar proyecto
 
     docker-compose up
 
-#### Ejecutar con base de datos local
 
-Construir proyecto
+Ejecutar pruebas unitarias
 
-    docker-compose -f local-db.yml build
-
-Crear migraciones
-
-    docker-compose -f local-db.yml run --rm django python manage.py makemigrations
-
-    docker-compose -f local-db.yml run --rm django python manage.py migrate
-
-Crear super usuario
-
-    docker-compose -f local-db.yml run --rm django python manage.py createsuperuser
-
-Crear datos iniciales en BD
-    
-    docker-compose -f local-db.yml run --rm django python manage.py runscript poblar_bd
-
-Ejecutar proyecto
-
-    docker-compose -f local-db.yml up
-
-Ejecutar pruebas
-
-    docker compose -f local-db.yml run --rm django pytest
+    docker compose run --rm django pytest
 
 
-### En el ambiente Producción
+Acceder al Admin de Django
 
-Copiar o actualizar archivos estaticos
+    http://localhost:8000/ms_quotes/app/admin/login/
 
-docker-compose -f local-db-production.yml run --rm django python manage.py collectstatic
 
-# Entornos virtuales
+Acceder a documentación con Swagger
 
-Crear entorno vitual
-
-```
-python3 -m venv django_api
-source django_api/bin/activate
-```
-
-Verificar librerias
-
-    pip freeze
-
-Migrar librerías a un archivo
-
-    pip freeze > requirements.txt
-
-Instalar librerías desde un archivo
-
-    pip install -r requirements.txt
-
-Ejecutar proyecto
-
-    python3 manage.py runserver
+    http://localhost:8000/swagger/
