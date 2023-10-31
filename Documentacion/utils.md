@@ -18,6 +18,11 @@ Crear super usuario
     docker-compose run --rm django python manage.py createsuperuser
 
 
+Crear datos iniciales en la BD
+
+    docker-compose run --rm django python manage.py runscript poblar_bd
+
+
 Ejecutar proyecto
 
     docker-compose up

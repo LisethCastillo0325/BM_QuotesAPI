@@ -16,6 +16,7 @@ from pathlib import Path
 ROOT_DIR = environ.Path(__file__) - 3
 APPS_DIR = ROOT_DIR.path('django_api')
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+print("*** BASE_DIR: ", BASE_DIR)
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
