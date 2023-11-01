@@ -15,6 +15,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "0.0.0.0",
     "127.0.0.1",
+    "bemanager-quotes:8000"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
