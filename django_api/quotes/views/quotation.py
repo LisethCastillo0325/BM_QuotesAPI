@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from django_api.utils.utils.utils import send_log_ekl
 
 # Monitoring
 from prometheus_client import Counter
@@ -108,16 +109,20 @@ class QuotationViewSet(mixins.ListModelMixin,
         """
         prometheus_c.labels('get', 'quotation/download/').inc()
         instance = self.get_object()
+        send_log_ekl("Descarga de cotización #{}".format(instance.id))
         data = self.get_serializer(instance=instance).data
 
         # Query current advertising
         data['api_url'] = settings.URL_BACKEND
-        print(data)
         template = os.path.join('documents', 'invoice.html')
         documents_view = DocumentsView()
 
-        return documents_view.generate_pdf(
-            template=template,
-            data=data,
-            file_name='invoice_{}_{}'.format(instance.id, instance.client)
-        )
+        try:
+            return documents_view.generate_pdf(
+                template=template,
+                data=data,
+                file_name='invoice_{}_{}'.format(instance.id, instance.client)
+            )
+        except Exception as error:
+            send_log_ekl("Error presentado en {}: {}".format(self.__class__.__name__, str(error)))
+            raise error
