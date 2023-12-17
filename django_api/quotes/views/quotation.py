@@ -10,6 +10,13 @@ from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
+# Monitoring
+from prometheus_client import Counter
+
+# Métricas personalizadas
+prometheus_c = Counter(
+    'quotation_trafic', 'Number of request received in the Quotation API', ['method', 'endpoint'])
+
 # Filters
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -54,6 +61,7 @@ class QuotationViewSet(mixins.ListModelMixin,
 
             Allows listing all invoices registered in the system.
         """
+        prometheus_c.labels('get', 'quotation/').inc()
         return super().list(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
@@ -61,6 +69,7 @@ class QuotationViewSet(mixins.ListModelMixin,
 
             Allows obtaining information about an quotation given its ID.
         """  
+        prometheus_c.labels('get', 'quotation/<id>').inc()
         return super().retrieve(request, *args, **kwargs)
 
     @transaction.atomic
@@ -69,6 +78,7 @@ class QuotationViewSet(mixins.ListModelMixin,
 
             Create quotation
         """
+        prometheus_c.labels('post', 'quotation/').inc()
         serializer = quotation_serializers.AddQuotationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         # Create an invoice for the quotation
@@ -82,6 +92,7 @@ class QuotationViewSet(mixins.ListModelMixin,
 
             Allows canceling an quotation, does not delete it.
         """
+        prometheus_c.labels('delete', 'quotation/').inc()
         return super().destroy(request, *args, **kwargs)
 
     def perform_destroy(self, instance):
@@ -95,13 +106,13 @@ class QuotationViewSet(mixins.ListModelMixin,
 
             Given an quotation ID, allows downloading its PDF representation.
         """
-
+        prometheus_c.labels('get', 'quotation/download/').inc()
         instance = self.get_object()
         data = self.get_serializer(instance=instance).data
 
         # Query current advertising
         data['api_url'] = settings.URL_BACKEND
-
+        print(data)
         template = os.path.join('documents', 'invoice.html')
         documents_view = DocumentsView()
 

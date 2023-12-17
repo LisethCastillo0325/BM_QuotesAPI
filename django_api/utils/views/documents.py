@@ -21,7 +21,7 @@ class DocumentsView(GenericViewSet):
         "enable-local-file-access": True,
     }
 
-    def generar_pdf(self, template, data, file_name='file', output_file=None):
+    def generate_pdf(self, template, data, file_name='file', output_file=None):
         """
         Permite generar un archivo PDF
         """

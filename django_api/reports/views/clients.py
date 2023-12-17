@@ -6,6 +6,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+# Monitoring
+from prometheus_client import Counter
+
+# Métricas personalizadas
+prometheus_c = Counter(
+    'reports_trafic', 'Number of request received in the Financial Information Report', ['method', 'endpoint'])
+
 # Models
 from django_api.quotes.models import Quotation
 
@@ -20,6 +27,7 @@ class ClientReportsViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=['GET'])
     def financial_information(self, request, **kwargs):
+        prometheus_c.labels('get', 'financial_information/').inc()
         """Financial Information of Clients
 
         Report of financial information of clients registered in the system.

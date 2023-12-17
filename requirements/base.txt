@@ -33,3 +33,6 @@ XlsxWriter==3.0.7
 celery==5.2.7
 flower==1.2.0
 redis==4.5.5
+
+# monitorin
+prometheus-client==0.19.0

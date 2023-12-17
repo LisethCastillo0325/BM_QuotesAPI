@@ -11,6 +11,7 @@ from django_api.reports import views
 
 router = DefaultRouter()
 router.register(r'report/clients', views.ClientReportsViewSet, basename='report_clients')
+router.register(r'report/monitoring', views.MonitoringViewSet, basename='report_monitoring')
 
 urlpatterns = [
     path('', include(router.urls)),

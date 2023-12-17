@@ -1,5 +1,5 @@
 
-{% extends 'documentos/base/index.html' %}
+{% extends 'documents/base/index.html' %}
 
 {% block title %} Factura {% endblock %}
 
@@ -30,8 +30,7 @@
         </div>
         <div class="col-6 ">
             <div class="row">
-                <p>
-                    NRG-X Nit:789.258.002-3 <br>
+                <p>BeManager Nit:830.741.141-2 <br>
                     <b>{{data.contrato.cliente.full_name | upper}}</b><br>
                     {{data.contrato.cliente.identification_type.label | upper}} {{data.contrato.cliente.identification_number}} <br>
                     {{data.contrato.direccion_instalacion | upper}}<br>
@@ -41,7 +40,7 @@
             <div class="row">
                 <div class="card">
                     <div class="card-body">
-                        <strong>Factura No. {{data.id}}</strong><br> 
+                        <strong>Cotización No. {{data.id}}</strong><br> 
                         <strong>Número de Pago Electronico: {{data.numero_pago_electronico}}</strong> <br>
                     </div>
                 </div>
@@ -52,10 +51,6 @@
                 <div class="card-body d-flex align-items-center">
                     
                     <table width="100%" border="0">
-                        <tr>
-                            <td><strong>CONTRATO</strong></td>
-                            <td><strong>{{data.contrato.id}}</strong></td>
-                        </tr>
                         <tr class="text-bg-primary rounded" width="100%">
                             <td><strong>TOTAL A PAGAR</strong></td>
                             <td><strong>$ {{data.total_a_pagar | intcomma}}</strong></td>
@@ -154,21 +149,13 @@
         <div class="col-5  justify-content-end"> 
             <div id="total-pagar" class="card">
                 <div class="card-header">
-                    <strong>TOTAL A PAGAR ESTE MES</strong>
+                    <strong>TOTAL A PAGAR</strong>
                 </div>
                 <div class="card-body">
                     <table class="table table-borderless" style="width: 100%;" >
                         <tr>
-                            <td width="70%">Total Servicios</td>
+                            <td width="70%">Total Articulos</td>
                             <td align="right">{{data.total_servicios | intcomma}}</td>
-                        </tr>
-                        <tr>
-                            <td>+ Cuentas Vencidas</td>
-                            <td align="right">{{data.valor_pendiente_pago | intcomma}}</td>
-                        </tr>
-                        <tr>
-                            <td>+ Recargo Mora</td>
-                            <td align="right">{{data.valor_recargo | intcomma}}</td>
                         </tr>
                     </table>
                 </div>
