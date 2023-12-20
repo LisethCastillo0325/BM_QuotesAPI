@@ -39,7 +39,7 @@ jobs:
         name: Build and push
         run: |
           docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64/v8 -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest -f compose/local/django/Dockerfile .
+          docker buildx build --platform linux/amd64,linux/arm64/v8 -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest -f ../../compose/local/django/Dockerfile .
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
   # deploy-aws:
